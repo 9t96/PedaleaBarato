@@ -1,6 +1,6 @@
 import { prisma } from "./lib/prisma";
 import { Retailer, BicycleScraped } from "./types/types";
-import type { Bicycle } from "./generated/prisma/client";
+import type { Bicycle, PriceHistory } from "./generated/prisma/client";
 
 
 // Nuevo sitio de bicicletas
@@ -32,6 +32,18 @@ async function upsertRetailer(retailer: Retailer) {
   console.log("Upserted retailer:", newRetailer);
 }
 
+async function searchByName(searchText: string) {
+  const bicicletas = await prisma.bicycle.findMany({
+    where: {
+      name: {
+        contains: searchText,
+        mode: 'insensitive'
+      }
+    }
+  });
+  return bicicletas;
+}
+
 async function findBikeTransaction(bicycle: BicycleScraped, retailerId: number) {
   return prisma.$transaction(async (tx) => {
   // Operaciones dentro de la transacción
@@ -60,22 +72,30 @@ async function findBikeTransaction(bicycle: BicycleScraped, retailerId: number) 
       });
       
     } else {
+      let hasEntrys: PriceHistory | null = await tx.priceHistory.findFirst({
+        where: { bicycleId: foundBicycle.id}
+      });
+      let priceChanged = false
       if (foundBicycle?.price !== bicycle.price) {
+        priceChanged = true;
         const updatedBicycle = await tx.bicycle.update({
           where: { productUrl: bicycle.productUrl },
           data: { price: bicycle.price },
         });
       }
-      await tx.priceHistory.create({
-        data: {
-          bicycleId: foundBicycle.id,
-          price: bicycle.price,
-          createdAt: new Date(),
-        },
-      });
+      if (!hasEntrys || priceChanged) {
+        await tx.priceHistory.create({
+          data: {
+            bicycleId: foundBicycle.id,
+            price: bicycle.price,
+            createdAt: new Date(),
+          },
+        });
+      }
+
     }
     return foundBicycle;
   });
 }
 
-export default upsertRetailer;
+export default  { upsertRetailer, searchByName };

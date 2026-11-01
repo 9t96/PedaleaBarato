@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { beforeEach, describe, it, mock } from "node:test";
+import { afterEach, beforeEach, describe, it, mock } from "node:test";
 import type { Retailer, BicycleScraped } from "./types/types.ts";
 
 const tx = {
@@ -9,10 +9,16 @@ const tx = {
     update: mock.fn(async (_args: unknown) => ({ id: 42 })),
   },
   priceHistory: {
+    findFirst: mock.fn(async (_args: unknown): Promise<{ id: number; bicycleId: number } | null> => ({
+      id: 100, bicycleId: 42,
+    })),
     create: mock.fn(async (_args: unknown) => ({ id: 100 })),
   },
 };
 const prisma = {
+  bicycle: {
+    findMany: mock.fn(async (_args: unknown): Promise<BicycleScraped[]> => []),
+  },
   retailer: {
     upsert: mock.fn(async (_args: unknown) => ({ id: 7 })),
   },
@@ -20,7 +26,11 @@ const prisma = {
 };
 
 mock.module("./lib/prisma.ts", { namedExports: { prisma } });
-const { default: upsertRetailer } = await import("./query.ts");
+const { default: { upsertRetailer, searchByName } } = await import("./query.ts");
+
+afterEach(() => {
+  mock.restoreAll();
+});
 
 const bicycle: BicycleScraped = {
   name: "Bicicleta rodado 29",
@@ -52,19 +62,51 @@ function assertHistory(price: number, startedAt: number) {
   assert.ok(data.createdAt.getTime() <= Date.now());
 }
 
+describe("searchByName", () => {
+  beforeEach(() => {
+    prisma.bicycle.findMany.mock.resetCalls();
+    mock.method(console, "log", () => {});
+  });
+
+  it("busca coincidencias parciales sin distinguir mayúsculas y devuelve las bicicletas encontradas", async () => {
+    const bicycles = [{ ...bicycle, name: "Trinx rodado 29" }];
+    prisma.bicycle.findMany.mock.mockImplementationOnce(async () => bicycles);
+
+    const result = await searchByName("TrInX");
+
+    assert.equal(prisma.bicycle.findMany.mock.callCount(), 1);
+    assert.deepEqual(prisma.bicycle.findMany.mock.calls[0].arguments, [{
+      where: { name: { contains: "TrInX", mode: "insensitive" } },
+    }]);
+    assert.deepEqual(result, bicycles);
+  });
+
+  it("devuelve una lista vacía cuando no hay coincidencias", async () => {
+    assert.deepEqual(await searchByName("inexistente"), []);
+  });
+
+  it("propaga los errores de la consulta", async () => {
+    const error = new Error("No se pudo buscar bicicletas");
+    prisma.bicycle.findMany.mock.mockImplementationOnce(async () => { throw error; });
+
+    await assert.rejects(searchByName("trinx"), (caught) => caught === error);
+  });
+});
+
 describe("upsertRetailer y las transacciones de bicicletas", () => {
-  beforeEach((context) => {
+  beforeEach(() => {
     for (const fn of [
       prisma.retailer.upsert,
       prisma.$transaction,
       tx.bicycle.findUnique,
       tx.bicycle.create,
       tx.bicycle.update,
+      tx.priceHistory.findFirst,
       tx.priceHistory.create,
     ]) {
       fn.mock.resetCalls();
     }
-    context.mock.method(console, "log", () => {});
+    mock.method(console, "log", () => {});
   });
 
   it("crea o actualiza el comercio usando su URL como identificador", async () => {
@@ -114,7 +156,7 @@ describe("upsertRetailer y las transacciones de bicicletas", () => {
     });
   }
 
-  it("no modifica la bicicleta ni duplica el historial si el precio no cambia", async () => {
+  it("no modifica la bicicleta ni duplica el historial si el precio no cambia y ya tiene historial", async () => {
     tx.bicycle.findUnique.mock.mockImplementationOnce(async () => ({ id: 42, ...bicycle }));
     await upsertRetailer(retailer());
 
@@ -123,6 +165,26 @@ describe("upsertRetailer y las transacciones de bicicletas", () => {
     assert.equal(tx.bicycle.update.mock.callCount(), 0);
     assert.equal(tx.priceHistory.create.mock.callCount(), 0);
   });
+
+  for (const previousPrice of [bicycle.price, 200_000]) {
+    it(`crea un único registro inicial si la bici no tiene historial y su precio anterior es ${previousPrice}`, async () => {
+      tx.bicycle.findUnique.mock.mockImplementationOnce(async () => ({
+        id: 42, ...bicycle, price: previousPrice,
+      }));
+      tx.priceHistory.findFirst.mock.mockImplementationOnce(async () => null);
+      const startedAt = Date.now();
+
+      await upsertRetailer(retailer());
+
+      assert.equal(tx.priceHistory.findFirst.mock.callCount(), 1);
+      assert.deepEqual(tx.priceHistory.findFirst.mock.calls[0].arguments, [{
+        where: { bicycleId: 42 },
+      }]);
+      assert.equal(tx.bicycle.create.mock.callCount(), 0);
+      assert.equal(tx.bicycle.update.mock.callCount(), previousPrice === bicycle.price ? 0 : 1);
+      assertHistory(bicycle.price, startedAt);
+    });
+  }
 
   it("procesa todas las bicicletas en transacciones individuales y espera que terminen", async () => {
     const secondBicycle = { ...bicycle, productUrl: "https://tienda.example/otra", price: 0 };
