@@ -3,9 +3,8 @@ import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { RetailersModule } from './retailers/retailers.module.js';
-import { BicyclesController } from './bicycles/bicycles.controller.js';
-import { BicyclesService } from './bicycles/bicycles.service.js';
 import { BicyclesModule } from './bicycles/bicycles.module.js';
+import { PrismaClientModule } from './prisma-client/prisma-client.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -20,8 +19,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     }),
     RetailersModule,
     BicyclesModule,
+    PrismaClientModule,
   ],
-  controllers: [AppController, BicyclesController],
-  providers: [AppService, BicyclesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

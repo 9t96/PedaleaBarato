@@ -32,18 +32,6 @@ async function upsertRetailer(retailer: RetailerScraped) {
   console.log("Upserted retailer:", newRetailer);
 }
 
-async function searchByName(searchText: string) {
-  const bicicletas = await prisma.bicycle.findMany({
-    where: {
-      name: {
-        contains: searchText,
-        mode: 'insensitive'
-      }
-    }
-  });
-  return bicicletas;
-}
-
 async function findBikeTransaction(bicycle: BicycleScraped, retailerId: number) {
   return prisma.$transaction(async (tx) => {
   // Operaciones dentro de la transacción
