@@ -1,0 +1,19 @@
+{
+  "name": "pedalea-barato-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/database",
+    "apps/api",
+    "apps/web",
+    "workers/scraper"
+  ],
+  "scripts": {
+    "prepare": "npm run build:database",
+    "db:generate": "npm run generate --workspace @pedalea-barato/database",
+    "build:database": "npm run build --workspace @pedalea-barato/database",
+    "build:api": "npm run build --workspace api",
+    "build:web": "npm run build --workspace pedalea-barato",
+    "test:api": "npm test --workspace api",
+    "test:scraper": "npm test --workspace scraper"
+  }
+}

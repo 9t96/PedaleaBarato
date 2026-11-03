@@ -1,6 +1,8 @@
 import * as cheerio from 'cheerio';
-import upsertRetailer from './query';
-import { BicycleScraped, Retailer } from './types/types';
+import queries from './query';
+import type { BicycleScraped, RetailerScraped } from './types/types';
+
+const { upsertRetailer } = queries;
 
 function getNumberFromString(str: string): number {
   const numberString = str.replace(/\D/g, "");
@@ -34,7 +36,7 @@ async function scrapBiciUrbana() {
         }
       }]
     });
-    const retailer: Retailer = {
+    const retailer: RetailerScraped = {
       name: 'Biciurbana',
       url: 'https://biciurbana.com.ar/',
       scrapUrl: 'https://biciurbana.com.ar/6-bicicletas',
@@ -84,7 +86,7 @@ async function scrapPopeyeProBike() {
         }
       }]
     });
-    const retailer: Retailer = {
+    const retailer: RetailerScraped = {
       name: 'Estacion Bike',
       url: 'https://www.estacionbike.com.ar/',
       scrapUrl: 'https://www.estacionbike.com.ar/bicicletas/',
@@ -126,7 +128,7 @@ async function scrapTrekArgentina() {
       }
     });
     console.log("Bicycles scraped:", bicycles);
-    const retailer: Retailer = {
+    const retailer: RetailerScraped = {
       name: 'Trek Argentina',
       url: 'https://www.trekbikesargentina.com/',
       scrapUrl: 'https://www.trekbikesargentina.com/bicicletas/',
@@ -167,7 +169,7 @@ async function scrapTrekArgentina() {
         }
       }]
     });
-    const retailer: Retailer = {
+    const retailer: RetailerScraped = {
       name: 'Canaglia',
       url: 'https://www.canaglia.com/',
       scrapUrl: 'https://www.canaglia.com/bicicletas',

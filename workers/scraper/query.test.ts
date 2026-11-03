@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it, mock } from "node:test";
-import type { Retailer, BicycleScraped } from "./types/types.ts";
+import type { RetailerScraped, BicycleScraped } from "./types/types.ts";
 
 const tx = {
   bicycle: {
@@ -41,7 +41,7 @@ const bicycle: BicycleScraped = {
   imageUrl: "https://tienda.example/bicicleta-29.jpg",
 };
 
-function retailer(bicycles: BicycleScraped[] = [bicycle]): Retailer {
+function retailer(bicycles: BicycleScraped[] = [bicycle]): RetailerScraped {
   return {
     name: "Tienda de bicicletas",
     url: "https://tienda.example",

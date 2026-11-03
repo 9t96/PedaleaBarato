@@ -1,6 +1,6 @@
 import { prisma } from "./lib/prisma";
-import { Retailer, BicycleScraped } from "./types/types";
-import type { Bicycle, PriceHistory } from "./generated/prisma/client";
+import { RetailerScraped, BicycleScraped } from "./types/types";
+import type { Bicycle, PriceHistory } from "@pedalea-barato/database";
 
 
 // Nuevo sitio de bicicletas
@@ -8,7 +8,7 @@ import type { Bicycle, PriceHistory } from "./generated/prisma/client";
 // Actualizar
 
 //O
-async function upsertRetailer(retailer: Retailer) {
+async function upsertRetailer(retailer: RetailerScraped) {
   // Create a new user with a post
   const newRetailer = await prisma.retailer.upsert({
     create: {

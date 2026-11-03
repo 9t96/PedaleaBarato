@@ -1,4 +1,4 @@
-interface Retailer {
+interface RetailerScraped {
   name: string;
   url: string;
   scrapUrl: string;
@@ -14,4 +14,4 @@ interface BicycleScraped {
   imageUrl: string;
 }
 
-export { Retailer, BicycleScraped };
+export { RetailerScraped, BicycleScraped };

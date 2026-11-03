@@ -1,4 +1,5 @@
-# Use postgres/example user/password credentials
+# PostgreSQL y Adminer para desarrollo local.
+name: scraper
 
 services:
 
