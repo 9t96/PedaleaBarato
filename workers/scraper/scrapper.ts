@@ -36,13 +36,15 @@ async function scrapBiciUrbana() {
         }
       }]
     });
+    const siteLogo:string = $('#header_logo > a > img').attr('src') || '';
+    console.log(siteLogo);
     const retailer: RetailerScraped = {
       name: 'Biciurbana',
       url: 'https://biciurbana.com.ar/',
       scrapUrl: 'https://biciurbana.com.ar/6-bicicletas',
+      siteLogo: siteLogo, 
       bicycles: bicyclesScraped.value as BicycleScraped[]
     };
-    console.log("Retailer scraped:", retailer);
     await upsertRetailer(retailer);
 
   } catch (error) {
@@ -89,6 +91,7 @@ async function scrapPopeyeProBike() {
     const retailer: RetailerScraped = {
       name: 'Estacion Bike',
       url: 'https://www.estacionbike.com.ar/',
+      siteLogo: $('#header_logo > a > img').text(),
       scrapUrl: 'https://www.estacionbike.com.ar/bicicletas/',
       bicycles: bicyclesScraped.value as BicycleScraped[]
     };
@@ -127,10 +130,12 @@ async function scrapTrekArgentina() {
         bicycles.push(bicycle);
       }
     });
-    console.log("Bicycles scraped:", bicycles);
+    const siteLogo = $('#logo > a > img').attr('src') || "";
+    console.log(siteLogo);
     const retailer: RetailerScraped = {
       name: 'Trek Argentina',
       url: 'https://www.trekbikesargentina.com/',
+      siteLogo: siteLogo,
       scrapUrl: 'https://www.trekbikesargentina.com/bicicletas/',
       bicycles: bicycles
     };

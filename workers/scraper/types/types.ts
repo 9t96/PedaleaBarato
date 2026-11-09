@@ -2,6 +2,7 @@ interface RetailerScraped {
   name: string;
   url: string;
   scrapUrl: string;
+  siteLogo: string;
   bicycles: BicycleScraped[];
 }
 

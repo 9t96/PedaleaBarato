@@ -17,6 +17,7 @@ model Retailer {
   name String
   url String @unique
   scrapUrl String
+  siteLogo String @default("") 
   bicycles Bicycle[]
 }
 

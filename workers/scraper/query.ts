@@ -2,21 +2,17 @@ import { prisma } from "./lib/prisma";
 import { RetailerScraped, BicycleScraped } from "./types/types";
 import type { Bicycle, PriceHistory } from "@pedalea-barato/database";
 
-
-// Nuevo sitio de bicicletas
-
-// Actualizar
-
-//O
 async function upsertRetailer(retailer: RetailerScraped) {
-  // Create a new user with a post
+  // Create a new reatiler with bicycles if doesnt exist
   const newRetailer = await prisma.retailer.upsert({
     create: {
       name: retailer.name,
       url: retailer.url,
       scrapUrl: retailer.scrapUrl,
+      siteLogo: retailer.siteLogo
     },
     update: {
+      siteLogo: retailer.siteLogo,
       scrapUrl: retailer.scrapUrl,
     },
     where: { url: retailer.url },
@@ -28,8 +24,6 @@ async function upsertRetailer(retailer: RetailerScraped) {
       return foundBicycle;
     })
   );
-
-  console.log("Upserted retailer:", newRetailer);
 }
 
 async function findBikeTransaction(bicycle: BicycleScraped, retailerId: number) {
@@ -86,4 +80,4 @@ async function findBikeTransaction(bicycle: BicycleScraped, retailerId: number) 
   });
 }
 
-export default  { upsertRetailer, searchByName };
+export default  { upsertRetailer };
