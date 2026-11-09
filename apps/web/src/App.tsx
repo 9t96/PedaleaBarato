@@ -2,19 +2,15 @@ import { useState } from 'react'
 import './App.css'
 import type { Bicycle } from './types/Bycicle';
 import CardBicycle from './components/CardBicycle';
+import getBicyclesByName from './api/bicyclesAPI';
 
 function App() {
 
   const [searchText, setSearchText] = useState('')
   const [searchResult, setSearchResult] = useState([]);
   const doSearch = async () => {
-    const url = `http://localhost:3000/bicycles/search/${searchText}`;
-    const response = (await fetch(url));
-    if (!response.ok) {
-      throw new Error("Error al obtener resultados.");
-    }
-    const datos = await response.json();
-    setSearchResult(datos);
+    const bicyclesJson = await getBicyclesByName(searchText)
+    setSearchResult(bicyclesJson);
   }
 
   return (
