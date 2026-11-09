@@ -30,6 +30,20 @@
   }
 }
 
+:root {
+  /* Colores Principales del Logo */
+  --color-primary-green: #00E676;       /* Verde Vibrante (Ahorro, descuentos, ofertas y botones) */
+  --color-primary-green-hover: #00C853; /* Verde más oscuro para hovers */
+  --color-bg-dark: #0B132B;             /* Azul Noche (Fondo principal del sitio) */
+  --color-teal: #00897B;                /* Teal / Azul-Verde (Subtítulos, detalles sutiles) */
+  
+  /* Textos, Superficies y Bordes */
+  --color-text-white: #FFFFFF;          /* Blanco (Textos principales) */
+  --color-text-muted: #94A3B8;          /* Gris azulado (Bajadas y textos secundarios) */
+  --color-card-bg: #14213D;             /* Azul intermedio para tarjetas de bicis */
+  --color-border: #1E293B;              /* Gris oscuro para bordes de inputs o separadores */
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;
