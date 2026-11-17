@@ -1,11 +1,11 @@
 export type Bicycle =  {
-    id: Number,
+    id: number,
     name: string,
-    price: Number,
-    oldPrice: Number,
+    price: number,
+    oldPrice: number,
     discount: string,
     productUrl: string,
     imageUrl: string,
-    retailerId: Number,
+    retailerId: number,
     lastScrapedAt: Date
 }

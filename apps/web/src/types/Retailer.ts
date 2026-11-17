@@ -1,5 +1,5 @@
 export type Retailer = {
-  id: Number,
+  id: number,
   name: string,
   url: string,
   siteLogo: string
