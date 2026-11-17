@@ -14,6 +14,14 @@ function Home() {
     setSearchResult(bicyclesJson);
   }
 
+
+  //this is the function that implement the feature
+  const handlekeyPress=(e: React.KeyboardEvent<HTMLInputElement>)=>{
+    if(e.key=='Enter'){
+      doSearch()      
+    }
+  }
+
   return (
     <>
       <Menu />
@@ -27,7 +35,7 @@ function Home() {
           <div className="search-form">
             <label htmlFor="bicycle-search" className="sr-only">Nombre o modelo de bicicleta</label>
             <Search size={22} aria-hidden="true" />
-            <input id="bicycle-search" value={searchText} onChange={e => setSearchText(e.target.value)} type="search" placeholder="Probá con rodado 29, mountain bike…" />
+            <input id="bicycle-search" value={searchText} onKeyUp={handlekeyPress} onChange={e => setSearchText(e.target.value)} type="search" placeholder="Probá con rodado 29, mountain bike…" />
             <button onClick={doSearch} type="button">Buscar bicicletas</button>
           </div>
           <p className="search-hint">Buscá por nombre o modelo. La compra se realiza en el sitio de cada tienda.</p>
