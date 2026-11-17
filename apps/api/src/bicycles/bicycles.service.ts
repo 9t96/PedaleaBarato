@@ -6,10 +6,22 @@ export class BicyclesService {
     async getByciclesByName(searchText: string): Promise<Object[]> {
         const bicicletas = await this.prismaClient.bicycle.findMany({
             where: {    
-            name: {
-                contains: searchText,
-                mode: 'insensitive'
-            }
+                OR: [
+                    {
+                        name: {
+                            contains: searchText,
+                            mode: 'insensitive'
+                        }
+                    },
+                    {
+                        retailer: {
+                            name: {
+                                contains: searchText,
+                                mode: 'insensitive',
+                            },
+                        },
+                    }
+                ]
             }
         });
         return bicicletas;
