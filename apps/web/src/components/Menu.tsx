@@ -11,7 +11,7 @@ export function Menu() {
           <span>Pedalea <strong>Barato</strong></span>
         </div>
         <nav className="site-nav" aria-label="Navegación principal">
-          <span>Inicio</span>
+          <NavLink to="/">Inicio</NavLink>
           <NavLink to="/vendedores">Tiendas</NavLink>
         </nav>
       </div>
