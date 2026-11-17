@@ -1,4 +1,3 @@
-import { Bike } from "lucide-react"
 import { NavLink } from "react-router"
 import "./pages.css"
 
@@ -7,8 +6,7 @@ export function Menu() {
     <header className="site-header">
       <div className="site-header-inner">
         <div className="site-brand">
-          <Bike size={28} aria-hidden="true" />
-          <span>Pedalea <strong>Barato</strong></span>
+          <img src="/logo.png" alt="Pedalea Barato Argentina" width={2172} height={724} />
         </div>
         <nav className="site-nav" aria-label="Navegación principal">
           <NavLink to="/">Inicio</NavLink>
