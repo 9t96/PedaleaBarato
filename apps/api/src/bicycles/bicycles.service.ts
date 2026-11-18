@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClientService } from '../prisma-client/prisma-client.service.js';
+import { Bicycle } from '@pedalea-barato/database';
 @Injectable()
 export class BicyclesService {
     constructor(private readonly prismaClient: PrismaClientService){}
-    async getByciclesByName(searchText: string): Promise<Object[]> {
+
+    async getBicycles() : Promise<Bicycle[]> {
+        const bicycles = await this.prismaClient.bicycle.findMany();
+        return bicycles;
+    }
+    
+    async getByciclesByName(searchText: string): Promise<Bicycle[]> {
         const bicicletas = await this.prismaClient.bicycle.findMany({
             where: {    
                 OR: [
@@ -22,6 +29,20 @@ export class BicyclesService {
                         },
                     }
                 ]
+            }
+        });
+        return bicicletas;
+    }
+
+        async getByciclesByRetailerId(retailerId: number): Promise<Bicycle[]> {
+            console.log(retailerId)
+        const bicicletas = await this.prismaClient.bicycle.findMany({
+            where: {    
+                retailer: {
+                    id: {
+                        equals: retailerId
+                    }
+                }
             }
         });
         return bicicletas;
