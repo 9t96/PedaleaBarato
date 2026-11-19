@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Search } from 'lucide-react'
 import type { Bicycle } from '../types/Bycicle'
 import CardBicycle from './CardBicycle'
-import getBicyclesByName from '../api/bicyclesAPI'
+import { getBicyclesByName } from '../api/bicyclesAPI'
 import { Menu } from './Menu'
 
 function Home() {

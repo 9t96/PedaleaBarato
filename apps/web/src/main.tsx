@@ -4,14 +4,19 @@ import './index.css'
 import { BrowserRouter, Route, Routes } from "react-router";
 import Home from './components/Home.tsx';
 import Retailers from './components/Retailers.tsx';
+import Footer from './components/Footer.tsx';
+import RetailerBicycles from './components/RetailerBicycles.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home/>} />
-        <Route path="/vendedores" element={<Retailers/>} />
+        <Route path="/vendedores" element={<Retailers/>}>
+        </Route>
+        <Route path="/vendedores/:retailerId?" element={<RetailerBicycles/>}/>
       </Routes>
+      <Footer />
     </BrowserRouter>
   </StrictMode>,
 )

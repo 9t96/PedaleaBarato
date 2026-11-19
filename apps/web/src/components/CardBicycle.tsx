@@ -1,20 +1,10 @@
 import type { Bicycle } from "@/types/Bycicle"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import formatPrice from "@/helpers/priceHelper"
 
 type CardBicycleProps = { bicycle: Bicycle }
 
 export function CardBicycle({ bicycle }: CardBicycleProps) {
-
-
-  function formatPrice(amount: number, currency: string = 'ARS', locale: string = 'es-AR') {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency,
-      // Opcional: ajustar decimales si lo necesitas
-      // minimumFractionDigits: 2,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  }
 
   return (
     <Card className="catalog-card">

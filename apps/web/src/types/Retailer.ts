@@ -3,4 +3,5 @@ export type Retailer = {
   name: string,
   url: string,
   siteLogo: string
+  bicycles: []
 }
