@@ -15,10 +15,4 @@ export class BicyclesController {
         return this.bicyclesService.getByciclesByName(text);
     }
 
-    @Get(':retailerId')
-    getBicyclesByRetailerId(@Param('retailerId',ParseIntPipe) retailerId:number ): Promise<Bicycle[]> {
-        return this.bicyclesService.getByciclesByRetailerId(retailerId);
-    }
-
-
 }

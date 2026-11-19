@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { RetailersService } from './retailers.service.js';
 import { Retailer } from '@pedalea-barato/database';
 
@@ -8,5 +8,10 @@ export class RetailersController {
     @Get()
     getRetailers(): Promise<Retailer[]> {
         return this.retailerService.getRetailers();
+    }
+
+    @Get(":retailerId")
+    getRetailerBycicles(@Param('retailerId',ParseIntPipe) retailerId:number): Promise<Retailer> {
+        return this.retailerService.getRetailerBycicles(retailerId);
     }
 }

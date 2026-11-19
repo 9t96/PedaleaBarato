@@ -33,18 +33,4 @@ export class BicyclesService {
         });
         return bicicletas;
     }
-
-        async getByciclesByRetailerId(retailerId: number): Promise<Bicycle[]> {
-            console.log(retailerId)
-        const bicicletas = await this.prismaClient.bicycle.findMany({
-            where: {    
-                retailer: {
-                    id: {
-                        equals: retailerId
-                    }
-                }
-            }
-        });
-        return bicicletas;
-    }
 }
